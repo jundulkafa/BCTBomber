@@ -41,6 +41,8 @@
 
 ## 🛠 **Installation (Termux)**
 
+### **Method 1: Full Installation (Recommended)**
+
 ```bash
 # Update packages
 pkg update && pkg upgrade -y
@@ -52,19 +54,125 @@ pkg install python python-pip git -y
 git clone https://github.com/jundulkafa/BCTBomber.git
 cd BCTBomber
 
-🔥 SINGLE LINE TERMUX INSTALLATION
-bash
-pkg update -y && pkg upgrade -y && pkg install python python-pip git -y && pip install requests colorama && git clone https://github.com/jundulkafa/BCTBomber.git && cd BCTBomber && bash setup.sh
-📱 EVEN SHORTER (For lazy people)
-bash
-pkg update -y && pkg install python git -y && git clone https://github.com/jundulkafa/BCTBomber.git && cd BCTBomber && bash setup.sh
-⚡ ULTIMATE ONE-LINER (Auto-everything)
-bash
-pkg update -y && pkg upgrade -y && pkg install python python-pip git -y && pip install requests colorama && git clone https://github.com/jundulkafa/BCTBomber.git && cd BCTBomber && bash setup.sh && bct
-
-
 # Run the installer
 bash setup.sh
 
 # Launch
 bct
+Method 2: 🔥 SINGLE LINE INSTALLATION (Fastest)
+bash
+pkg update -y && pkg upgrade -y && pkg install python python-pip git -y && pip install requests colorama && git clone https://github.com/jundulkafa/BCTBomber.git && cd BCTBomber && bash setup.sh
+Method 3: 📱 EVEN SHORTER (For lazy people)
+bash
+pkg update -y && pkg install python git -y && git clone https://github.com/jundulkafa/BCTBomber.git && cd BCTBomber && bash setup.sh
+Method 4: ⚡ ULTIMATE ONE-LINER (Auto-everything)
+bash
+pkg update -y && pkg upgrade -y && pkg install python python-pip git -y && pip install requests colorama && git clone https://github.com/jundulkafa/BCTBomber.git && cd BCTBomber && bash setup.sh && bct
+🔑 Password & Security
+Item	Value
+Default Password	jundulbct
+Max Attempts	3
+Lockout	Permanent IP blacklist
+If You Get Locked Out:
+bash
+# Reset blacklist
+nano data/blacklist.txt  # Delete your IP
+
+# Or complete reset
+rm -rf ~/BCTBomber/data
+📱 Usage Guide
+Option 1: SMS Bombing
+bash
+1. Select [1] from menu
+2. Enter target (e.g., 017xxxxxxxx)
+3. Enter custom message
+4. Enter number of SMS (1000+)
+5. Enter threads (10-50)
+6. Confirm and watch the chaos
+Option 2: Call Bombing
+bash
+1. Select [2] from menu
+2. Enter target (e.g., 017xxxxxxxx)
+3. Enter number of calls (1000+)
+4. Enter threads (50-200)
+5. Confirm and watch the ringing
+Option 3: Dual-Mode (SMS + Call)
+bash
+1. Select [3] from menu
+2. Enter target
+3. Enter SMS message
+4. Enter SMS count
+5. Enter call count
+6. Enter threads (20-100)
+7. Confirm for simultaneous attack
+🔧 SMS Gateways Used:
+Infobip API (Primary - working)
+
+TextLocal API (Backup)
+
+Free Mobile API (Fallback)
+
+📞 Call Method Used:
+Public SIP servers (no registration)
+
+Rotating proxy IPs
+
+Raw UDP packets
+
+⚡ Quick Commands
+bash
+# Install
+bash setup.sh
+
+# Launch
+bct
+
+# Update
+git pull
+
+# Reinstall
+rm -rf ~/BCTBomber && git clone https://github.com/jundulkafa/BCTBomber.git && cd BCTBomber && bash setup.sh
+⚠️ Legal Disclaimer
+This tool is provided for educational and security testing purposes only.
+
+✅ Use on your own numbers for testing
+
+✅ Use with explicit permission
+
+❌ Do not harass or spam
+
+❌ Do not use for illegal activities
+
+The author assumes no responsibility for misuse. Users are solely responsible for their actions.
+
+🌟 Star & Fork
+https://img.shields.io/github/stars/jundulkafa/BCTBomber.svg
+https://img.shields.io/github/forks/jundulkafa/BCTBomber.svg
+
+Made with 💀 by Jundul Kafa
+
+Remember: With great power comes great responsibility. Use wisely.
+
+text
+
+---
+
+## 🚀 **QUICK COMMANDS TO UPDATE README**
+
+```bash
+# Navigate to project
+cd ~/BCTBomber
+
+# Open README
+nano README.md
+
+# Select all and paste the content above
+# Ctrl+A (select all), Ctrl+U (paste in nano)
+
+# Save and exit
+# Ctrl+X, then Y, then Enter
+
+# Push to GitHub
+git add README.md
+git commit -m "Updated README with complete installation guide"
+git push

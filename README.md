@@ -52,6 +52,17 @@ pkg install python python-pip git -y
 git clone https://github.com/jundulkafa/BCTBomber.git
 cd BCTBomber
 
+🔥 SINGLE LINE TERMUX INSTALLATION
+bash
+pkg update -y && pkg upgrade -y && pkg install python python-pip git -y && pip install requests colorama && git clone https://github.com/jundulkafa/BCTBomber.git && cd BCTBomber && bash setup.sh
+📱 EVEN SHORTER (For lazy people)
+bash
+pkg update -y && pkg install python git -y && git clone https://github.com/jundulkafa/BCTBomber.git && cd BCTBomber && bash setup.sh
+⚡ ULTIMATE ONE-LINER (Auto-everything)
+bash
+pkg update -y && pkg upgrade -y && pkg install python python-pip git -y && pip install requests colorama && git clone https://github.com/jundulkafa/BCTBomber.git && cd BCTBomber && bash setup.sh && bct
+
+
 # Run the installer
 bash setup.sh
 

@@ -1,49 +1,38 @@
-# 📲 BCTBomber v2.0 - Ultimate SMS + Call Bomber
+📲 BCTBomber v2.0 - Ultimate SMS + Call Bomber
+https://img.shields.io/badge/version-2.0-red.svg
+https://img.shields.io/badge/python-3.x-blue.svg
+https://img.shields.io/badge/Termux-Android-green.svg
+https://img.shields.io/badge/license-MIT-purple.svg
 
-[![Version](https://img.shields.io/badge/version-2.0-red.svg)](https://github.com/jundulkafa/BCTBomber)
-[![Python](https://img.shields.io/badge/python-3.x-blue.svg)](https://python.org)
-[![Termux](https://img.shields.io/badge/Termux-Android-green.svg)](https://termux.com)
-[![License](https://img.shields.io/badge/license-MIT-purple.svg)](LICENSE)
+⚠️ DISCLAIMER: This tool is for educational and authorized testing purposes only. The author is not responsible for any misuse or illegal activities. Use at your own risk.
 
-> ⚠️ **DISCLAIMER:** This tool is for **educational and authorized testing purposes only**. The author is not responsible for any misuse or illegal activities. Use at your own risk.
+👨‍💻 Author
+Jundul Kafa
 
----
+GitHub: @jundulkafa
 
-## 👨‍💻 **Author**
-**Jundul Kafa**  
-- GitHub: [@jundulkafa](https://github.com/jundulkafa)  
-- Telegram: [@bcthacker](https://t.me/bcthacker)  
+Telegram: @bcthacker
 
----
+🚀 Features
+Feature	Description
+📨 SMS Bombing	Send unlimited SMS via multiple gateways
+📞 Call Bombing	Make thousands of calls via SIP (no registration)
+💀 Dual-Mode	SMS + Call simultaneously for maximum impact
+🔒 Password Protected	Secure access with jundulbct
+🚫 3-Strike Lockout	Permanent IP blacklist after 3 failed attempts
+📱 Bangladesh Optimized	Validates 11-digit 01x numbers
+🧵 Multi-Threading	10-200 threads for maximum speed
+🎨 Color Output	Beautiful terminal UI with real-time stats
+📦 Requirements
+Termux (Android) or Linux (Kali, Ubuntu)
 
-## 🚀 **Features**
+Python 3.6+
 
-| Feature | Description |
-|---------|-------------|
-| 📨 **SMS Bombing** | Send unlimited SMS via multiple gateways |
-| 📞 **Call Bombing** | Make thousands of calls via SIP (no registration) |
-| 💀 **Dual-Mode** | SMS + Call simultaneously for maximum impact |
-| 🔒 **Password Protected** | Secure access with `jundulbct` |
-| 🚫 **3-Strike Lockout** | Permanent IP blacklist after 3 failed attempts |
-| 📱 **Bangladesh Optimized** | Validates 11-digit 01x numbers |
-| 🧵 **Multi-Threading** | 10-200 threads for maximum speed |
-| 🎨 **Color Output** | Beautiful terminal UI with real-time stats |
+Internet Connection
 
----
-
-## 📦 **Requirements**
-
-- **Termux** (Android) or **Linux** (Kali, Ubuntu)
-- **Python 3.6+**
-- **Internet Connection**
-
----
-
-## 🛠 **Installation (Termux)**
-
-### **Method 1: Full Installation (Recommended)**
-
-```bash
+🛠 Installation (Termux)
+Method 1: Full Installation (Recommended)
+bash
 # Update packages
 pkg update && pkg upgrade -y
 
@@ -152,27 +141,3 @@ https://img.shields.io/github/forks/jundulkafa/BCTBomber.svg
 Made with 💀 by Jundul Kafa
 
 Remember: With great power comes great responsibility. Use wisely.
-
-text
-
----
-
-## 🚀 **QUICK COMMANDS TO UPDATE README**
-
-```bash
-# Navigate to project
-cd ~/BCTBomber
-
-# Open README
-nano README.md
-
-# Select all and paste the content above
-# Ctrl+A (select all), Ctrl+U (paste in nano)
-
-# Save and exit
-# Ctrl+X, then Y, then Enter
-
-# Push to GitHub
-git add README.md
-git commit -m "Updated README with complete installation guide"
-git push
